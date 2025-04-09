@@ -1,13 +1,13 @@
 variable "subnet_id" {
-    type = number
+    type = string
 }
 
 variable "vpc_id" {
-    type = number
+    type = string
 }
 
 variable "cidr_ipv4" {
-    type = number
+    type = string
 }
 
 variable "private_ssh_key" {

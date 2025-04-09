@@ -16,25 +16,28 @@ data "aws_ami" "ubuntu" {
 
 resource "aws_instance" "main_public_instance" {
   ami           = data.aws_ami.ubuntu.id
-  instance_type = "t3.micro"
-  user_data = "${file("scripts/init.sh")}"
+
+  instance_type = "t3.small"
+  availability_zone = "eu-central-1a"
+  security_groups = [
+    aws_security_group.allow_http.id,
+    aws_security_group.allow_ssh.id,
+  ]
+
+  user_data = file("${path.module}/scripts/init.sh")
 
   subnet_id = var.subnet_id
 
-  // Use docker-compose (for simplicity purposes) in order to start a simple volume and a pod running a minecraft server, mount the EBS volume to a location
-  // within the instance (mount the device file to a location) and later use it when mounting the volume to the pod (mount it from a local instance location) 
-
-  provisioner "remote-exec" {
+  provisioner "file" {
     connection {
-        type     = "ssh"
-        user     = "ubuntu"
-        host     = self.public_ip
-        private_key = vars.private_ssh_key
+      type     = "ssh"
+      user     = "ubuntu"
+      host     = self.public_ip
+      private_key = var.private_ssh_key
     }
 
-    inline = [
-
-    ]
+    source = "${path.module}/scripts/docker-compose.yaml"
+    destination = "/home/ubuntu/docker-compose.yaml"
   }
 
   tags = {
