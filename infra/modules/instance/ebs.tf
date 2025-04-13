@@ -37,11 +37,14 @@ resource "aws_volume_attachment" "data_att" {
         private_key = var.private_ssh_key
     }
     inline = [
-      "sudo mkdir /data",
+      "sudo mkdir -p /data",
       "sudo mount /dev/nvme1n1 /data",
-      "sudo docker compose up -d",
+      "if [ \"${var.download_map}\" = \"true\" ]; then",
+      "  export MINECAFT_WORLD_PATH=https://minecraft-parkour-maps.s3.eu-central-1.amazonaws.com/current-map.zip",
+      "  sudo -E docker compose up -d",
+      "else",
+      "  sudo docker compose up -d",
+      "fi"
     ]
   }
 }
-
-// TODO: check why the server freezes when doing sudo docker ps -a, try to connect to it in minecraft, check whether the container has any errors

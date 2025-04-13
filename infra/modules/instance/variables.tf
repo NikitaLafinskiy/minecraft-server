@@ -13,3 +13,7 @@ variable "cidr_ipv4" {
 variable "private_ssh_key" {
     type = string
 }
+
+variable "download_map" {
+    type = bool
+}

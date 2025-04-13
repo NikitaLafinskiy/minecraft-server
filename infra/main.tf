@@ -8,4 +8,5 @@ module "instance" {
   vpc_id          = module.network.vpc_id
   cidr_ipv4       = module.network.cidr_ipv4
   private_ssh_key = var.private_ssh_key
+  download_map = var.download_map
 }

@@ -9,3 +9,7 @@ variable "access_key" {
 variable "secret_key" {
   type = string
 }
+
+variable "download_map" {
+  type = bool
+}
